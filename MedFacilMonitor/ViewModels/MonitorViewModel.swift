@@ -14,9 +14,17 @@ final class MonitorViewModel: ObservableObject {
     init(service:SyncServiceProtocol=SyncService()){ self.service=service }
     deinit { refreshTask?.cancel() }
     var filteredStores:[SyncStore] { stores.filter { s in (searchText.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty || s.code.localizedCaseInsensitiveContains(searchText)) && (selectedFilter == .all || s.status() == selectedFilter) } }
-    var activeCount:Int { stores.filter{$0.status()==.active}.count }
-    var warningCount:Int { stores.filter{$0.status()==.warning}.count }
-    var offlineCount:Int { stores.filter{$0.status()==.offline}.count }
+    var activeCount: Int {
+    stores.filter { $0.status() == .active }.count
+}
+
+var warningCount: Int {
+    stores.filter { $0.status() == .warning }.count
+}
+
+var offlineCount: Int {
+    stores.filter { $0.status() == .offline }.count
+}
     func start(){ guard refreshTask==nil else{return}; refreshTask=Task{[weak self] in guard let self else{return}; await self.refresh(showLoading:true); while !Task.isCancelled { try? await Task.sleep(for:.seconds(30)); if Task.isCancelled{break}; await self.refresh() } } }
     func refresh(showLoading:Bool=false) async {
         guard !isRefreshing else{return}; isRefreshing=true; if showLoading && stores.isEmpty { isLoading=true }; errorMessage=nil
