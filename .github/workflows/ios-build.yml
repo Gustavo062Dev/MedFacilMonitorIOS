@@ -1,0 +1,37 @@
+name: Build iOS
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+      - name: Instalar XcodeGen
+        run: brew install xcodegen
+      - name: Gerar projeto Xcode
+        run: xcodegen generate
+      - name: Compilar aplicativo
+        run: |
+          xcodebuild \
+            -project MedFacilMonitor.xcodeproj \
+            -scheme MedFacilMonitor \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+      - name: Compactar aplicativo
+        run: |
+          cd DerivedData/Build/Products/Debug-iphonesimulator
+          zip -r MedFacilMonitor-Simulator.zip MedFacilMonitor.app
+      - name: Salvar aplicativo compilado
+        uses: actions/upload-artifact@v4
+        with:
+          name: MedFacilMonitor-iOS-Simulator
+          path: DerivedData/Build/Products/Debug-iphonesimulator/MedFacilMonitor-Simulator.zip
+          retention-days: 7

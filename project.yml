@@ -1,0 +1,31 @@
+name: MedFacilMonitor
+options:
+  bundleIdPrefix: com.medfacil
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CODE_SIGN_STYLE: Automatic
+targets:
+  MedFacilMonitor:
+    type: application
+    platform: iOS
+    sources:
+      - path: MedFacilMonitor
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.medfacil.monitor
+        PRODUCT_NAME: MedFacilMonitor
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: "MedFácil Monitor"
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+        CODE_SIGN_IDENTITY: ""
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    scheme:
+      testTargets: []
